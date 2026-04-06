@@ -6,6 +6,7 @@ Bank Foundry is a modular platform comprising a robust FastAPI backend for merch
 - **Python 3.10+**
 - **Node.js 18+**
 - **PostgreSQL**
+- **Ollama** (for local, on-prem LLM inference)
 
 ## Project Structure
 - `app/`: Python backend source code, built as a FastAPI application (`app.api.server`).
@@ -29,12 +30,22 @@ The backend is a traditional Python project focusing on FastAPI.
    python3 -m venv venv
    source venv/bin/activate
    ```
-2. Set up environment variables. You will need external API keys, especially for the LLM integration. Create a `.env` in the root:
-   ```env
-   GEMINI_API_KEY=your_gemini_api_key_here
+2. Install dependencies via `requirements.txt`:
+   ```bash
+   pip install -r requirements.txt
    ```
-3. Install standard ASGI dependencies alongside any specific packages required by the app (FastAPI, uvicorn, SQLAlchemy, Langchain, etc.).
-4. Run the backend server using Uvicorn:
+3. Set up environment variables. Since the primary focus is using an on-premise model instead of a cloud provider like Gemini, you will configure Ollama. Create a `.env` in the root:
+   ```env
+   LLM_PROVIDER=ollama
+   OLLAMA_MODEL=qwen3:8b
+   OLLAMA_BASE_URL=http://localhost:11434
+   ```
+4. Ensure Ollama is running your specified model natively or via Docker:
+   ```bash
+   ollama serve
+   ollama pull qwen3:8b
+   ```
+5. Run the backend server using Uvicorn:
    ```bash
    uvicorn app.api.server:app --host 0.0.0.0 --port 8000 --reload
    ```
