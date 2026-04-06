@@ -13,8 +13,8 @@ Usage:
     # Apply views after validation
     python scripts/schema_mapper.py --db-url "postgresql://user:pass@host:5432/db" --apply
 
-    # Override the Gemini model
-    python scripts/schema_mapper.py --db-url "postgresql://..." --model gemini-2.5-pro --apply
+    # Override the OpenAI model
+    python scripts/schema_mapper.py --db-url "postgresql://..." --model gpt-4o --apply
 """
 
 from __future__ import annotations
@@ -31,7 +31,7 @@ from typing import Any
 
 from dotenv import load_dotenv
 from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
 from sqlalchemy import create_engine, text
 
 # ---------------------------------------------------------------------------
@@ -234,11 +234,11 @@ Map required columns first, then as many optional columns as the data supports.
 Output ONLY the SQL DDL. No explanations."""
 
 
-def _create_llm(*, model: str, api_key: str, temperature: float = 0.1) -> ChatGoogleGenerativeAI:
-    """Create a Gemini LLM instance."""
-    return ChatGoogleGenerativeAI(
+def _create_llm(*, model: str, api_key: str, temperature: float = 0.1) -> ChatOpenAI:
+    """Create an OpenAI LLM instance."""
+    return ChatOpenAI(
         model=model,
-        google_api_key=api_key,
+        openai_api_key=api_key,
         temperature=temperature,
     )
 
@@ -251,7 +251,7 @@ def generate_view_ddl(
     temperature: float = 0.1,
 ) -> str:
     """Send the schema to the LLM and get back CREATE VIEW DDL."""
-    logger.info("Stage 2: Generating view DDL via Gemini (%s)...", model)
+    logger.info("Stage 2: Generating view DDL via OpenAI (%s)...", model)
 
     llm = _create_llm(model=model, api_key=api_key, temperature=temperature)
     prompt = build_mapping_prompt(manifest)
@@ -486,13 +486,13 @@ def main() -> None:
     )
     parser.add_argument(
         "--model",
-        default=os.getenv("GEMINI_MODEL", "gemini-2.5-flash"),
-        help="Gemini model to use for schema mapping (default: GEMINI_MODEL env var or gemini-2.5-flash)",
+        default=os.getenv("OPENAI_MODEL", "gpt-4o"),
+        help="OpenAI model to use for schema mapping (default: OPENAI_MODEL env var or gpt-4o)",
     )
     parser.add_argument(
         "--api-key",
-        default=os.getenv("GEMINI_API_KEY", ""),
-        help="Google Gemini API key (default: GEMINI_API_KEY env var)",
+        default=os.getenv("OPENAI_API_KEY", ""),
+        help="OpenAI API key (default: OPENAI_API_KEY env var)",
     )
     parser.add_argument(
         "--apply",
@@ -507,7 +507,7 @@ def main() -> None:
     args = parser.parse_args()
 
     if not args.api_key:
-        logger.error("No Gemini API key provided. Use --api-key or set GEMINI_API_KEY in .env")
+        logger.error("No OpenAI API key provided. Use --api-key or set OPENAI_API_KEY in .env")
         sys.exit(1)
 
     if not args.db_url:
