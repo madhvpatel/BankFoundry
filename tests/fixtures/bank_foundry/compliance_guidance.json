@@ -1,0 +1,18 @@
+{
+  "topics": {
+    "merchant_screening": {
+      "topic": "merchant_screening",
+      "guidance": [
+        "Confirm the merchant identity against the latest screening hit.",
+        "Do not mark the hit cleared without an auditable reviewer decision."
+      ]
+    },
+    "aml_investigation": {
+      "topic": "aml_investigation",
+      "guidance": [
+        "Keep seeded screening results as advisory until live evidence is attached.",
+        "Do not close the AML review until the analyst records the final disposition."
+      ]
+    }
+  }
+}

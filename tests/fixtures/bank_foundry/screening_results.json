@@ -1,0 +1,32 @@
+{
+  "merchants": {
+    "m_001": {
+      "overall_status": "needs_review",
+      "results": [
+        {
+          "screening_type": "sanctions",
+          "status": "needs_review",
+          "matched_name": "Demo Store",
+          "screened_at": "2026-03-29T08:00:00Z",
+          "source_ref": "screen_001"
+        }
+      ]
+    },
+    "m_demo_risk": {
+      "overall_status": "needs_review",
+      "results": [
+        {
+          "screening_type": "watchlist_refresh",
+          "status": "needs_review",
+          "matched_name": "Demo Trading LLC",
+          "screened_at": "2026-03-29T08:00:00Z",
+          "source_ref": "screen_001"
+        }
+      ]
+    },
+    "default": {
+      "overall_status": "clear",
+      "results": []
+    }
+  }
+}

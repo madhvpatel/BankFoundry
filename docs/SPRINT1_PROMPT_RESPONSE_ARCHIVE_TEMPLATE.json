@@ -1,0 +1,25 @@
+{
+  "generated_at": "2026-03-09T00:00:00+00:00",
+  "base_url": "http://127.0.0.1:8765",
+  "cases": [
+    {
+      "case_id": "OPS_SHORTFALL",
+      "response_path": "artifacts/sprint1_manual_validation/cases/OPS_SHORTFALL.json",
+      "response": {
+        "merchant_id": "100000000121215",
+        "prompt": "I expected Rs 20,000 settlement but got Rs 19,000. Explain the shortfall.",
+        "lane": "operations",
+        "terminal_id": null,
+        "answer": "...",
+        "operations_section": {},
+        "growth_section": {},
+        "tool_calls": [],
+        "tool_results": [],
+        "evidence": [],
+        "terminal_focus": null,
+        "intent": "general",
+        "active_lane": "operations"
+      }
+    }
+  ]
+}

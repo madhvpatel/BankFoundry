@@ -1,0 +1,43 @@
+{
+  "merchant_id": "m_demo_support",
+  "cases": [
+    {
+      "ticket_id": "SUP-101",
+      "channel": "merchant_portal",
+      "category": "settlement_follow_up",
+      "status": "open",
+      "opened_at": "2026-03-26T09:30:00Z",
+      "last_updated_at": "2026-03-28T08:45:00Z",
+      "summary": "Merchant asked for the next payout update."
+    },
+    {
+      "ticket_id": "SUP-098",
+      "channel": "email",
+      "category": "refund_delay",
+      "status": "resolved",
+      "opened_at": "2026-03-20T10:00:00Z",
+      "last_updated_at": "2026-03-22T15:10:00Z",
+      "summary": "Refund timing clarification was shared with the merchant."
+    }
+  ],
+  "contacts": [
+    {
+      "contact_id": "CNT-101",
+      "name": "Support Merchant Contact",
+      "role": "merchant_owner",
+      "channel": "merchant_portal",
+      "last_contact_at": "2026-03-28T08:40:00Z",
+      "notes": "Merchant wants the next update inside the portal thread."
+    }
+  ],
+  "escalations": [
+    {
+      "escalation_id": "ESC-201",
+      "target_team": "settlements_desk",
+      "status": "open",
+      "opened_at": "2026-03-27T11:30:00Z",
+      "updated_at": "2026-03-28T09:15:00Z",
+      "summary": "Waiting for the settlements desk to confirm the next payout checkpoint."
+    }
+  ]
+}

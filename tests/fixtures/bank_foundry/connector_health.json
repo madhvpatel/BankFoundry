@@ -1,0 +1,11 @@
+{
+  "connector_name": "settlement_ops_core",
+  "status": "degraded",
+  "last_run_status": "failed",
+  "run_count": 5,
+  "latest_run": {
+    "run_id": "run_001",
+    "status": "FAILED",
+    "error_message": "Timeout from sandbox endpoint"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "service": "background_refresh",
+  "alerts": [
+    {
+      "alert_id": "ALERT-201",
+      "severity": "high",
+      "status": "open",
+      "opened_at": "2026-03-30T08:00:00Z",
+      "summary": "Background refresh latency crossed threshold"
+    }
+  ]
+}

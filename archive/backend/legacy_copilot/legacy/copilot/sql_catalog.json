@@ -1,0 +1,83 @@
+{
+  "version": "1.0",
+  "tables": [
+    {
+      "name": "transaction_features",
+      "description": "Core payments fact table for transaction attempts.",
+      "columns": [
+        "merchant_id",
+        "p_date",
+        "status",
+        "payment_mode",
+        "response_code",
+        "amount_rupees",
+        "terminal_id",
+        "hour_of_day",
+        "card_network",
+        "device_type"
+      ]
+    },
+    {
+      "name": "merchants",
+      "description": "Merchant profile and business metadata.",
+      "columns": [
+        "mid",
+        "merchant_trade_name",
+        "nature_of_business",
+        "business_city",
+        "merchant_risk_category",
+        "merchant_status",
+        "annual_turnover"
+      ]
+    },
+    {
+      "name": "settlements",
+      "description": "Settlement payout records for merchants.",
+      "columns": [
+        "merchant_id",
+        "mid",
+        "settlement_id",
+        "status",
+        "settlement_status",
+        "expected_date",
+        "settlement_date",
+        "amount_rupees",
+        "net_settlement_amount"
+      ]
+    },
+    {
+      "name": "chargebacks",
+      "description": "Chargeback cases and lifecycle status.",
+      "columns": [
+        "merchant_id",
+        "chargeback_id",
+        "status",
+        "opened_at",
+        "due_by",
+        "amount_rupees",
+        "reason_code",
+        "network",
+        "tx_id"
+      ]
+    },
+    {
+      "name": "refunds",
+      "description": "Refund records by merchant and transaction.",
+      "columns": [
+        "merchant_id",
+        "refund_id",
+        "status",
+        "created_at",
+        "amount_rupees",
+        "tx_id"
+      ]
+    }
+  ],
+  "recommended_views": [
+    "transaction_features",
+    "settlements",
+    "chargebacks",
+    "refunds",
+    "merchants"
+  ]
+}

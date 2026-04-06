@@ -1,0 +1,27 @@
+{
+  "merchants": {
+    "m_001": {
+      "hits": [
+        {
+          "watchlist_name": "sanctions_screening",
+          "match_status": "potential_match",
+          "matched_name": "Demo Store",
+          "source_ref": "wl_001"
+        }
+      ]
+    },
+    "m_demo_risk": {
+      "hits": [
+        {
+          "watchlist_name": "sanctions_screening",
+          "match_status": "potential_match",
+          "matched_name": "Demo Trading LLC",
+          "source_ref": "wl_001"
+        }
+      ]
+    },
+    "default": {
+      "hits": []
+    }
+  }
+}
