@@ -8,4 +8,5 @@ ollama==0.2.1
 langchain==0.2.6
 langchain-community==0.2.6
 langchain-ollama==0.0.1
+langchain-google-genai==1.0.7
 langgraph==0.1.4

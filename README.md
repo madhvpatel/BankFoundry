@@ -72,9 +72,11 @@ Bank Foundry expects specific table structures (`transaction_features`, `merchan
 **How it works:**
 
 1. Discovers all tables, columns, types, foreign keys, and sample data in the target database.
-2. Sends the discovered schema to your local Ollama model alongside the canonical Bank Foundry schema.
+2. Sends the discovered schema to Google Gemini alongside the canonical Bank Foundry schema.
 3. The LLM generates `CREATE VIEW` statements that present the foreign data in the expected format.
 4. Validates the views with smoke tests and automatically retries with self-healing if errors occur.
+
+**Prerequisites:** Set `GEMINI_API_KEY` in your `.env` file.
 
 **Usage:**
 
@@ -85,8 +87,8 @@ python scripts/schema_mapper.py --db-url "postgresql://user:pass@host:5432/forei
 # Apply the views after validation passes
 python scripts/schema_mapper.py --db-url "postgresql://user:pass@host:5432/foreign_db" --apply
 
-# Override the LLM model for better reasoning on complex schemas
-python scripts/schema_mapper.py --db-url "postgresql://..." --model qwen3:8b --apply
+# Override the Gemini model for better reasoning on complex schemas
+python scripts/schema_mapper.py --db-url "postgresql://..." --model gemini-2.5-pro --apply
 ```
 
 A `schema_mapping_report.json` file is generated in the project root after each run for auditing.

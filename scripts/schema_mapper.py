@@ -13,8 +13,8 @@ Usage:
     # Apply views after validation
     python scripts/schema_mapper.py --db-url "postgresql://user:pass@host:5432/db" --apply
 
-    # Override the LLM model
-    python scripts/schema_mapper.py --db-url "postgresql://..." --model qwen3:8b --apply
+    # Override the Gemini model
+    python scripts/schema_mapper.py --db-url "postgresql://..." --model gemini-2.5-pro --apply
 """
 
 from __future__ import annotations
@@ -31,7 +31,7 @@ from typing import Any
 
 from dotenv import load_dotenv
 from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_ollama import ChatOllama
+from langchain_google_genai import ChatGoogleGenerativeAI
 from sqlalchemy import create_engine, text
 
 # ---------------------------------------------------------------------------
@@ -234,17 +234,26 @@ Map required columns first, then as many optional columns as the data supports.
 Output ONLY the SQL DDL. No explanations."""
 
 
+def _create_llm(*, model: str, api_key: str, temperature: float = 0.1) -> ChatGoogleGenerativeAI:
+    """Create a Gemini LLM instance."""
+    return ChatGoogleGenerativeAI(
+        model=model,
+        google_api_key=api_key,
+        temperature=temperature,
+    )
+
+
 def generate_view_ddl(
     manifest: dict[str, Any],
     *,
     model: str,
-    base_url: str,
+    api_key: str,
     temperature: float = 0.1,
 ) -> str:
     """Send the schema to the LLM and get back CREATE VIEW DDL."""
-    logger.info("Stage 2: Generating view DDL via LLM (%s)...", model)
+    logger.info("Stage 2: Generating view DDL via Gemini (%s)...", model)
 
-    llm = ChatOllama(model=model, base_url=base_url, temperature=temperature)
+    llm = _create_llm(model=model, api_key=api_key, temperature=temperature)
     prompt = build_mapping_prompt(manifest)
 
     response = llm.invoke([
@@ -301,7 +310,7 @@ def validate_and_heal(
     manifest: dict[str, Any],
     *,
     model: str,
-    base_url: str,
+    api_key: str,
 ) -> dict[str, Any]:
     """
     Parse, execute, and validate DDL. On failure, ask the LLM to fix it.
@@ -341,7 +350,7 @@ def validate_and_heal(
                 # Ask the LLM to fix it
                 current_stmt = _heal_statement(
                     current_stmt, error_msg, manifest,
-                    model=model, base_url=base_url,
+                    model=model, api_key=api_key,
                 )
         else:
             continue
@@ -366,11 +375,11 @@ def _heal_statement(
     manifest: dict[str, Any],
     *,
     model: str,
-    base_url: str,
+    api_key: str,
 ) -> str:
     """Ask the LLM to fix a failed CREATE VIEW statement."""
     logger.info("    → Asking LLM to heal the statement...")
-    llm = ChatOllama(model=model, base_url=base_url, temperature=0.05)
+    llm = _create_llm(model=model, api_key=api_key, temperature=0.05)
 
     # Build a compact schema summary for context
     schema_summary = {}
@@ -477,13 +486,13 @@ def main() -> None:
     )
     parser.add_argument(
         "--model",
-        default=os.getenv("OLLAMA_MODEL", "qwen3:8b"),
-        help="Ollama model to use for schema mapping (default: OLLAMA_MODEL env var)",
+        default=os.getenv("GEMINI_MODEL", "gemini-2.5-flash"),
+        help="Gemini model to use for schema mapping (default: GEMINI_MODEL env var or gemini-2.5-flash)",
     )
     parser.add_argument(
-        "--ollama-url",
-        default=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
-        help="Ollama server URL (default: OLLAMA_BASE_URL env var)",
+        "--api-key",
+        default=os.getenv("GEMINI_API_KEY", ""),
+        help="Google Gemini API key (default: GEMINI_API_KEY env var)",
     )
     parser.add_argument(
         "--apply",
@@ -496,6 +505,10 @@ def main() -> None:
         help="Path to write the mapping report JSON",
     )
     args = parser.parse_args()
+
+    if not args.api_key:
+        logger.error("No Gemini API key provided. Use --api-key or set GEMINI_API_KEY in .env")
+        sys.exit(1)
 
     if not args.db_url:
         logger.error("No database URL provided. Use --db-url or set DATABASE_URL in .env")
@@ -513,7 +526,7 @@ def main() -> None:
     ddl = generate_view_ddl(
         manifest,
         model=args.model,
-        base_url=args.ollama_url,
+        api_key=args.api_key,
     )
 
     if not ddl:
@@ -541,7 +554,7 @@ def main() -> None:
     validation_report = validate_and_heal(
         engine, ddl, manifest,
         model=args.model,
-        base_url=args.ollama_url,
+        api_key=args.api_key,
     )
 
     # --- Stage 4: Report ---
